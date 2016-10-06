@@ -1,0 +1,37 @@
+dependencies:
+  pre:
+    - wget -q https://dl.bintray.com/sbt/debian/sbt-0.13.12.deb
+    - sudo dpkg -i sbt-0.13.12.deb
+  cache_directories:
+    - ~/.sbt
+    - ~/.coursier
+
+  pre:
+    - scripts/check-env-variables.sh
+    - git fetch --unshallow || true
+
+  override:
+    - sbt -batch +test:compile +package
+
+  post:
+    - find ~/.sbt -name "*.lock" | xargs rm
+    - find ~/.ivy2 -name "ivydata-*.properties" | sed 's/ /\\ /g' | sed 's/)/\\)/g' | xargs rm
+
+test:
+  override:
+    - sbt +test:test
+
+  post:
+    - find . -path "*/test-reports/*" -exec mv {} ${CIRCLE_TEST_REPORTS} \;
+
+deployment:
+  release:
+    owner: pico-works
+    branch: [develop, master]
+    commands:
+      - sbt +publish
+
+  development:
+    branch: /PR-.*/
+    commands:
+      - sbt +publish
