@@ -4,7 +4,7 @@ import sbt._
 object Build extends sbt.Build {
   val pico_disposal     = "org.pico"                  %%  "pico-disposal"           % "1.0.5"
   val pico_event        = "org.pico"                  %%  "pico-event"              % "3.0.1"
-  val httpclient        = "org.apache.httpcomponents" %   "httpclient"              % "4.5.2"
+  val httpasyncclient   = "org.apache.httpcomponents" %   "httpasyncclient"         % "4.1.2"
 
   val specs2_core       = "org.specs2"                %%  "specs2-core"             % "3.7.2"
   val typesafe_config   = "com.typesafe"              %   "config"                  % "1.3.1"
@@ -32,7 +32,7 @@ object Build extends sbt.Build {
 
   lazy val `pico-event-http-client` = Project(id = "pico-event-http-client", base = file("pico-event-http-client"))
       .standard("pico-event shim library for event-http").it
-      .libs(pico_disposal, httpclient)
+      .libs(pico_disposal, httpasyncclient)
       .testLibs(specs2_core)
       .itLibs(typesafe_config)
 
