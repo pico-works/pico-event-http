@@ -14,7 +14,7 @@ import scala.concurrent.{ExecutionContext, Future}
 case class HttpClient(impl: CloseableHttpAsyncClient) extends SimpleDisposer {
   this.disposes(impl)
 
-  def sink(implicit ec: ExecutionContext): SinkSource[HttpRequest, Future[HttpResponse]] = {
+  def sinkSource(implicit ec: ExecutionContext): SinkSource[HttpRequest, Future[HttpResponse]] = {
     SinkSource[HttpRequest, Future[HttpResponse]] { request =>
       execute(request.toApache).map(_ => HttpOk(): HttpResponse)
     }

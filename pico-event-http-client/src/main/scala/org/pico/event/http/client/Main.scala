@@ -25,7 +25,7 @@ object Main {
       // Start the client
       httpclient.impl.start()
 
-      val x: SinkSource[HttpRequest, Future[HttpResponse]] = httpclient.sink
+      val x: SinkSource[HttpRequest, Future[HttpResponse]] = httpclient.sinkSource
 
       // One most likely would want to use a callback for operation result
       val request2 = new HttpGet("http://www.apache.org/")
