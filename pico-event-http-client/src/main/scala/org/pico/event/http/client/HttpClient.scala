@@ -1,19 +1,27 @@
 package org.pico.event.http.client
 
-import org.apache.http.HttpResponse
+import org.apache.{http => apache}
 import org.apache.http.client.methods.HttpUriRequest
 import org.apache.http.impl.nio.client.{CloseableHttpAsyncClient, HttpAsyncClients}
 import org.pico.disposal.SimpleDisposer
 import org.pico.disposal.std.autoCloseable._
+import org.pico.event.SinkSource
 import org.pico.event.http.client.internal.Async
+import org.pico.event.http.client.model.{HttpOk, HttpRequest, HttpResponse}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 case class HttpClient(impl: CloseableHttpAsyncClient) extends SimpleDisposer {
   this.disposes(impl)
 
-  def execute(request: HttpUriRequest): Future[HttpResponse] = {
-    Async.handle[HttpResponse] { callback =>
+  def sink(implicit ec: ExecutionContext): SinkSource[HttpRequest, Future[HttpResponse]] = {
+    SinkSource[HttpRequest, Future[HttpResponse]] { request =>
+      execute(request.toApache).map(_ => HttpOk(): HttpResponse)
+    }
+  }
+
+  def execute(request: HttpUriRequest): Future[apache.HttpResponse] = {
+    Async.handle[apache.HttpResponse] { callback =>
       impl.execute(request, callback)
     }
   }
@@ -22,5 +30,3 @@ case class HttpClient(impl: CloseableHttpAsyncClient) extends SimpleDisposer {
 object HttpClient {
   def apply(): HttpClient = HttpClient(HttpAsyncClients.createDefault())
 }
-
-
