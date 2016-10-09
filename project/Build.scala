@@ -3,7 +3,7 @@ import sbt._
 
 object Build extends sbt.Build {
   val pico_disposal     = "org.pico"                  %%  "pico-disposal"           % "1.0.5"
-  val pico_event        = "org.pico"                  %%  "pico-event"              % "3.0.2-63-3a0f53e"
+  val pico_event        = "org.pico"                  %%  "pico-event"              % "3.0.2"
   val httpasyncclient   = "org.apache.httpcomponents" %   "httpasyncclient"         % "4.1.2"
 
   val specs2_core       = "org.specs2"                %%  "specs2-core"             % "3.7.2"
